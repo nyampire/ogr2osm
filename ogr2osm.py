@@ -155,8 +155,7 @@ if options.translationMethod:
         print type(options.translationMethod)
 
     try:
-#        translations = __import__(options.translationMethod)
-        translations = options.translationMethod
+        translations = __import__(options.translationMethod)
     except:
         parser.error("Could not load translation method '%s'. Translation "
                "script must be in your current directory, or in the "
