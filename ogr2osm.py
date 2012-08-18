@@ -34,7 +34,7 @@ Released under the MIT license: http://opensource.org/licenses/mit-license.php
 
 Based very heavily on code released under the following terms:
 
-(c) Iván Sánchez Ortega, 2009
+(c) Ivan Sanchez Ortega, 2009
 <ivan@sanchezortega.es>
 ###############################################################################
 #  "THE BEER-WARE LICENSE":                                                   #
@@ -58,6 +58,7 @@ from osgeo import ogr
 from osgeo import osr
 
 from SimpleXMLWriter import XMLWriter
+import codecs
 
 # Setup program usage
 usage = "usage: %prog SRCFILE"
@@ -151,9 +152,11 @@ if options.translationMethod:
     # strip .py if present, as import wants just the module name
     if ext == '.py':
         options.translationMethod = os.path.basename(root)
+        print type(options.translationMethod)
 
     try:
-        translations = __import__(options.translationMethod)
+#        translations = __import__(options.translationMethod)
+        translations = options.translationMethod
     except:
         parser.error("Could not load translation method '%s'. Translation "
                "script must be in your current directory, or in the "
@@ -512,7 +515,7 @@ def output():
     relations = [geometry for geometry in geometries if type(geometry) == Relation]
     featuresmap = {feature.geometry : feature for feature in features}
 
-    w = XMLWriter(open(options.outputFile, 'w'))
+    w = XMLWriter(codecs.open(options.outputFile, 'w', 'utf-8'))
     if options.noUploadFalse:
         w.start("osm", version='0.6', generator='uvmogr2osm')
     else:
@@ -565,3 +568,4 @@ parseData(data)
 mergePoints()
 translations.preOutputTransform(geometries, features)
 output()
+

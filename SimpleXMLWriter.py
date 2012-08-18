@@ -87,7 +87,7 @@
 # </pre>
 ##
 
-import re, sys, string
+import re, sys, string, codecs
 
 try:
     unicode("")
@@ -108,7 +108,7 @@ def encode_entity(text, pattern=_escape):
         for char in m.group():
             out.append("&#%d;" % ord(char))
         return string.join(out, "")
-    return encode(pattern.sub(escape_entities, text), "ascii")
+    return encode(pattern.sub(escape_entities, text), "shift_jis")
 
 del _escape
 
@@ -149,9 +149,9 @@ def escape_attrib(s, encoding=None, replace=string.replace):
 
 class XMLWriter:
 
-    def __init__(self, file, encoding="us-ascii"):
+    def __init__(self, file, encoding="utf-8"):
         if not hasattr(file, "write"):
-            file = open(file, "w")
+            file = codecs.open(file, "w", "utf-8")
         self.__write = file.write
         if hasattr(file, "flush"):
             self.flush = file.flush
@@ -175,7 +175,8 @@ class XMLWriter:
 
     def declaration(self):
         encoding = self.__encoding
-        if encoding == "us-ascii" or encoding == "utf-8":
+#        if encoding == "us-ascii" or encoding == "utf-8":
+        if encoding == "utf-8":
             self.__write("<?xml version='1.0'?>\n")
         else:
             self.__write("<?xml version='1.0' encoding='%s'?>\n" % encoding)
@@ -277,3 +278,4 @@ class XMLWriter:
 
     def flush(self):
         pass # replaced by the constructor
+
